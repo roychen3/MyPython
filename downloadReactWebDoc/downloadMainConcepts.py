@@ -59,12 +59,13 @@ def translateWordByVoiceTube(word):
 
 try:
     print('爬取資料...')
-    url = 'https://reactjs.org/docs/introducing-jsx.html'
+    url = 'https://reactjs.org/docs/hello-world.html'
     soup = crawl(url, 'utf-8')
     pageArticle = soup.find_all('article', {'class': 'css-174qq1k'})   
     articleHeader = soup.find_all('h1', {'class': 'css-1rwyxsf'})   
     articleH2 = pageArticle[0].find_all('h2')   
-    articleUlLi = pageArticle[0].find_all('ul')   
+    articleUlLi = pageArticle[0].find_all('ul')
+    articleOlLi = pageArticle[0].find_all('ol')
     articleContent = pageArticle[0].find_all('p')
     
     clearTagContent = ''
@@ -82,6 +83,10 @@ try:
     if len(articleUlLi) != 0:
         clearTagContent += articleUlLi[0].get_text() + ' '
     
+    # 擷取 <ol></ol>
+    if len(articleOlLi) != 0:
+        clearTagContent += articleOlLi[0].get_text() + ' '
+        
     # 擷取 <p></p>
     for content in articleContent:
         clearTagContent += content.get_text()
@@ -100,9 +105,8 @@ try:
             i = 0
             #clearTagContent += content.string
         '''
-    
+        
     #print(clearTagContent)
-    
     print('整理資料...')
     # 利用正則表達式把不必要的標點符號刪除
     clearTagContent = re.sub('[0-9!\"#$%&\'()*+,./:;<=>?@[\\]^_`{|}~\n，。！：（）；€【】「❤éфриендыл？”“、～]', ' ', clearTagContent)
@@ -136,6 +140,7 @@ try:
             fw.write('\r\r')
         fw.close()
     print('完成')
+    
 except Exception as ex:
     print(str(ex))
     
